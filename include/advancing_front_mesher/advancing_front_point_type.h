@@ -42,7 +42,7 @@
 #include <pcl/point_types.h>
 #include <ostream>
 
-namespace industrial_pcl
+namespace advancing_front_mesher
 {
 struct EIGEN_ALIGN16 _AdvancingFrontVertexPointType
 {
@@ -133,10 +133,10 @@ struct AdvancingFrontGuidanceFieldPointType : public _AdvancingFrontGuidanceFiel
     return (os);
   }
 };
-}  // namespace industrial_pcl
+}  // namespace advancing_front_mesher
 
 POINT_CLOUD_REGISTER_POINT_STRUCT(
-    industrial_pcl::AdvancingFrontVertexPointType,
+    advancing_front_mesher::AdvancingFrontVertexPointType,
     (float, x, x)(float, y, y)(float, z, z)(float, normal_x, normal_x)(float, normal_y, normal_y)(
         float,
         normal_z,
@@ -145,7 +145,7 @@ POINT_CLOUD_REGISTER_POINT_STRUCT(
                                                                           max_step_search_radius))
 
 POINT_CLOUD_REGISTER_POINT_STRUCT(
-    industrial_pcl::AdvancingFrontGuidanceFieldPointType,
+    advancing_front_mesher::AdvancingFrontGuidanceFieldPointType,
     (float, x, x)(float, y, y)(float, z, z)(float, normal_x, normal_x)(float, normal_y, normal_y)(
         float,
         normal_z,
