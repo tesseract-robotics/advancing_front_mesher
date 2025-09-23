@@ -49,6 +49,7 @@
 #include <pcl/surface/reconstruction.h>
 #include <pcl/surface/mls.h>
 #include <pcl/geometry/polygon_mesh.h>
+#include <pcl/octree/octree.h>
 
 namespace industrial_pcl
 {
@@ -627,11 +628,7 @@ protected:
   pcl::PointCloud<AdvancingFrontGuidanceFieldPointType>::Ptr mls_cloud_;
   pcl::search::KdTree<AdvancingFrontGuidanceFieldPointType>::Ptr mls_cloud_tree_;
   pcl::PointIndicesPtr mls_corresponding_input_indices_;
-#ifdef _OPENMP
-  pcl::MovingLeastSquaresOMP<PointNT, AdvancingFrontGuidanceFieldPointType> mls_;
-#else
   pcl::MovingLeastSquares<PointNT, AdvancingFrontGuidanceFieldPointType> mls_;
-#endif
   double max_curvature_;
   double min_curvature_;
 

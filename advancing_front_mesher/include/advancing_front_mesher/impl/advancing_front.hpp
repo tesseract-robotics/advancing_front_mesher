@@ -46,6 +46,7 @@
 
 #include <pcl/geometry/mesh_conversion.h>
 #include <pcl/common/distances.h>
+#include <pcl/common/io.h>
 
 #include <eigen3/Eigen/LU>
 
@@ -174,7 +175,7 @@ template <typename PointNT>
 pcl::PointCloud<pcl::Normal>::ConstPtr AdvancingFront<PointNT>::getMeshVertexNormals() const
 {
   pcl::PointCloud<pcl::Normal>::Ptr pn(new pcl::PointCloud<pcl::Normal>());
-  ;
+
   pcl::copyPointCloud(*mesh_vertex_data_ptr_, *pn);
 
   return pn;

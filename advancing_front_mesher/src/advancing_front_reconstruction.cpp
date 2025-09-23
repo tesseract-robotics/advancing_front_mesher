@@ -51,6 +51,8 @@
 #include <pcl/console/parse.h>
 #include <pcl/console/time.h>
 
+#include <filesystem>
+
 using namespace industrial_pcl;
 using namespace pcl;
 using namespace pcl::io;
@@ -196,7 +198,7 @@ protected:
 
     // Remove previous fence from viewer
     for (long unsigned int j = 1; j <= fence_counter_; ++j)
-      viewer_->removeShape("fence" + static_cast<std::ostringstream*>(&(std::ostringstream() << j))->str(), 2);
+      viewer_->removeShape("fence" + std::to_string(j), 2);
 
     fence_counter_ = 0;
 
@@ -337,8 +339,7 @@ protected:
                      .getVector3fMap();
       end_pt = (this->mesh_vertex_data_ptr_->at((this->mesh_.getTerminatingVertexIndex(pvr.ttcr.fences[i])).get()))
                    .getVector3fMap();
-      std::string fence_name =
-          "fence" + static_cast<std::ostringstream*>(&(std::ostringstream() << fence_counter_))->str();
+      std::string fence_name = "fence" + std::to_string(fence_counter_);
       viewer_->addLine<pcl::PointXYZ, pcl::PointXYZ>(pcl::PointXYZ(start_pt(0), start_pt(1), start_pt(2)),
                                                      pcl::PointXYZ(end_pt(0), end_pt(1), end_pt(2)),
                                                      0,
@@ -351,8 +352,7 @@ protected:
 
     if (pvr.ttcr.fence_index >= 0)
     {
-      std::string fence_name =
-          "fence" + static_cast<std::ostringstream*>(&(std::ostringstream() << (pvr.ttcr.fence_index + 1)))->str();
+      std::string fence_name = "fence" + std::to_string(pvr.ttcr.fence_index + 1);
       viewer_->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 255, 140, 0, fence_name, 1);
     }
 
@@ -556,7 +556,7 @@ int main(int argc, char** argv)
 
   // Parse command line arguments
   std::string input_file = argv[1];
-  std::string input_extension = boost::filesystem::extension(input_file);
+  std::string input_extension = std::filesystem::path(input_file).extension().string();
   if (input_extension != ".pcd" && input_extension != ".ply")
   {
     print_error("Only input file types supported are: pcd and ply.\n");
@@ -564,7 +564,7 @@ int main(int argc, char** argv)
   }
 
   std::string output_file = argv[2];
-  std::string output_extension = boost::filesystem::extension(output_file);
+  std::string output_extension = std::filesystem::path(output_file).extension().string();
   if (output_extension != ".vtk" && output_extension != ".ply")
   {
     print_error("Only output file types supported are: vtk and ply.\n");
