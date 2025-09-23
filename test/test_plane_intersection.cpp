@@ -40,7 +40,7 @@
 #include <pcl/common/common.h>
 #include <pcl/pcl_tests.h>
 
-using namespace industrial_pcl;
+using namespace advancing_front_mesher;
 using namespace pcl;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

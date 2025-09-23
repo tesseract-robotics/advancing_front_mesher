@@ -8,7 +8,6 @@ AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortFunctionsOnASingleLine: true
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
-AllowShortLoopsOnASingleLine: false
 AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: true
 BinPackArguments: false
@@ -53,7 +52,8 @@ UseTab: Never
 BreakBeforeBraces: Custom
 
 # Control of individual brace wrapping cases
-BraceWrapping: {
+BraceWrapping:
+    AfterCaseLabel : 'true'
     AfterClass: 'true'
     AfterControlStatement: 'true'
     AfterEnum : 'true'
@@ -64,5 +64,5 @@ BraceWrapping: {
     BeforeCatch : 'true'
     BeforeElse : 'true'
     IndentBraces : 'false'
-}
+
 ...

@@ -41,7 +41,7 @@
 
 #include <pcl/console/print.h>
 
-namespace industrial_pcl
+namespace advancing_front_mesher
 {
 bool alignNormals(Eigen::Ref<Eigen::Vector3f> pn, const Eigen::Ref<const Eigen::Vector3f>& av)
 {
@@ -68,4 +68,4 @@ bool checkNormalsEqual(const Eigen::Vector3f& n1, const Eigen::Vector3f& n2, con
   }
 }
 
-}  // namespace industrial_pcl
+}  // namespace advancing_front_mesher

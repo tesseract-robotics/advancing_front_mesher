@@ -46,7 +46,7 @@
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
 
-using namespace industrial_pcl;
+using namespace advancing_front_mesher;
 using namespace pcl;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

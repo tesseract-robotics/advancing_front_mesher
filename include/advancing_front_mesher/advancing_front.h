@@ -51,7 +51,7 @@
 #include <pcl/geometry/polygon_mesh.h>
 #include <pcl/octree/octree.h>
 
-namespace industrial_pcl
+namespace advancing_front_mesher
 {
 /** \brief The advancing front reconstruction algorithm. This implementaton is based on the following paper.
  *
@@ -82,11 +82,7 @@ protected:
     using HalfEdgeData = int;
     using EdgeData = int;
     using FaceData = pcl::PointNormal;
-#ifdef PCL_LESS_1_10
-    using IsManifold = boost::true_type;
-#else
     using IsManifold = std::true_type;
-#endif
   };
 
   using Mesh = pcl::geometry::PolygonMesh<MeshTraits>;
@@ -257,7 +253,7 @@ public:
 #ifdef _OPENMP
   static const int AFRONT_DEFAULT_THREADS;
 #endif
-  static const size_t AFRONT_DEFAULT_SAMPLE_SIZE;
+  static const std::size_t AFRONT_DEFAULT_SAMPLE_SIZE;
   static const int AFRONT_DEFAULT_POLYNOMIAL_ORDER;
   static const double AFRONT_DEFAULT_REDUCTION;
   static const double AFRONT_DEFAULT_RHO;
@@ -346,21 +342,10 @@ public:
   /** \brief Set the number of sample triangles to generate.
    * \note num_samples = 0 will mesh the entire PointCloud.
    */
-  inline void setSampleSize(const size_t num_samples)
-  {
-    if (num_samples < 0)
-    {
-      PCL_ERROR("AFront sample size must be greater than or equal to zero. Using default value.\n");
-      samples_ = AFRONT_DEFAULT_SAMPLE_SIZE;
-    }
-    else
-    {
-      samples_ = num_samples;
-    }
-  }
+  inline void setSampleSize(const std::size_t num_samples) { samples_ = num_samples; }
 
   /** \brief Get the number of sample triangles to generate. */
-  inline size_t getSampleSize() const { return samples_; }
+  inline std::size_t getSampleSize() const { return samples_; }
 
   /** \brief Set the boundary angle threshold used to determine if a point is on the boundary of the point cloud. */
   inline void setBoundaryAngleThreshold(const double angle)
@@ -608,7 +593,7 @@ protected:
   double reduction_; /**< \brief The allowed percent reduction from triangle to triangle. */
   double search_radius_;           /**< \brief The search radius used by mls */
   int polynomial_order_;           /**< \brief The degree of the polynomial used by mls */
-  size_t samples_;                 /**< \brief The number of sample triangle to create. */
+  std::size_t samples_;            /**< \brief The number of sample triangle to create. */
   double max_allowed_edge_length_; /**< \brief The maximum allowed edge length of any given triangle. */
 #ifdef _OPENMP
   int threads_; /**< \brief The number of threads to be used by mls */
@@ -616,12 +601,13 @@ protected:
 
   // Algorithm Data
   double hausdorff_error_;
-  double max_edge_length_;     /**< \brief This can be used to calculate the max error fo the reconstruction
-                                  (max_edge_length_ * hausdorff_error_) */
-  size_t required_neighbors_;  /**< \brief This the required number of neighbors for a given point found during the MLS.
-                                */
-  double vertex_normal_tol_;   /**< \brief The angle tolerance for vertex normals for a given triangle */
-  double triangle_normal_tol_; /**< \brief The angle tolerance for the triangle normal relative to vertex normals */
+  double max_edge_length_;         /**< \brief This can be used to calculate the max error fo the reconstruction
+                                      (max_edge_length_ * hausdorff_error_) */
+  std::size_t required_neighbors_; /**< \brief This the required number of neighbors for a given point found during the
+                                    * MLS.
+                                    */
+  double vertex_normal_tol_;       /**< \brief The angle tolerance for vertex normals for a given triangle */
+  double triangle_normal_tol_;     /**< \brief The angle tolerance for the triangle normal relative to vertex normals */
   double boundary_angle_threshold_; /**< \brief The boundary angle threshold */
 
   // Guidance field data
@@ -650,7 +636,7 @@ template <typename PointNT>
 const int AdvancingFront<PointNT>::AFRONT_DEFAULT_THREADS = 1;
 #endif
 template <typename PointNT>
-const size_t AdvancingFront<PointNT>::AFRONT_DEFAULT_SAMPLE_SIZE = 0;
+const std::size_t AdvancingFront<PointNT>::AFRONT_DEFAULT_SAMPLE_SIZE = 0;
 template <typename PointNT>
 const int AdvancingFront<PointNT>::AFRONT_DEFAULT_POLYNOMIAL_ORDER = 2;
 template <typename PointNT>
@@ -668,7 +654,7 @@ const double AdvancingFront<PointNT>::AFRONT_CLOSE_PROXIMITY_FACTOR = 0.5;
 template <typename PointNT>
 const double AdvancingFront<PointNT>::AFRONT_FENCE_HEIGHT_FACTOR = 2.0;
 
-}  // namespace industrial_pcl
+}  // namespace advancing_front_mesher
 
 #ifdef PCL_NO_PRECOMPILE
 #include <advancing_front_mesher/impl/advancing_front.hpp>

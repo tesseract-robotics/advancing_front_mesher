@@ -1,27 +1,27 @@
-name: Clang-Formatting
+name: Clang-Format
 
 on:
   push:
     branches:
       - main
+      - 'dev**'
   pull_request:
-    branches:
-      - main
+  schedule:
+    - cron: '0 5 * * *'
 
 jobs:
-  industrial_ci:
-    name: Clang-Formatting
-    runs-on: ubuntu-latest
-    env:
-      CI_NAME: Clang-Formatting
-      OS_NAME: ubuntu
-      OS_CODE_NAME: focal
-      ROS_DISTRO: noetic
-      ROS_REPO: main
-      DOCKER_IMAGE: "ros:noetic"
-      CLANG_FORMAT_CHECK: file
-      CLANG_FORMAT_VERSION: 8
+  clang_format:
+    name: Clang-Format
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: 'ros-industrial/industrial_ci@master'
-        env: ${{env}}
+      - uses: actions/checkout@v4
+
+      - name: Run clang format
+        run: |
+          sudo apt update
+          sudo apt install -y git clang-format-12
+          if [ $? -ge 1 ]; then return 1; fi
+          ./.run-clang-format
+          if [ $? -ge 1 ]; then return 1; fi
+          output=$(git diff)
+          if [ -n "$output" ]; then exit 1; else exit 0; fi

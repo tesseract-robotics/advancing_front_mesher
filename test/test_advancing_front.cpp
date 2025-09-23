@@ -62,7 +62,7 @@ TEST(PCL, AdvancingFront)
   }
   cloud.is_dense = false;
 
-  industrial_pcl::AdvancingFront<pcl::PointXYZ> mesher;
+  advancing_front_mesher::AdvancingFront<pcl::PointXYZ> mesher;
   pcl::PointCloud<pcl::PointXYZ>::Ptr in_cloud(new pcl::PointCloud<pcl::PointXYZ>(cloud));
   pcl::PolygonMesh output;
 

@@ -54,7 +54,7 @@
 #include <boost/make_shared.hpp>
 #include <boost/bind.hpp>
 
-namespace industrial_pcl
+namespace advancing_front_mesher
 {
 template <typename PointNT>
 AdvancingFront<PointNT>::AdvancingFront() : search_radius_(0.0)
@@ -141,7 +141,7 @@ bool AdvancingFront<PointNT>::computeGuidanceField()
   // Calculate the max principle curvature using mls result polynomial data
   max_curvature_ = std::numeric_limits<double>::min();
   min_curvature_ = std::numeric_limits<double>::max();
-  for (size_t i = 0; i < mls_cloud_->size(); ++i)
+  for (std::size_t i = 0; i < mls_cloud_->size(); ++i)
   {
     Eigen::Vector3d point = mls_cloud_->at(i).getVector3fMap().template cast<double>();
     int index = mls_corresponding_input_indices_->indices[i];
@@ -149,7 +149,7 @@ bool AdvancingFront<PointNT>::computeGuidanceField()
 
     double u, v;
     mls_result.getMLSCoordinates(point, u, v);
-    double k = mls_result.calculatePrincipleCurvatures(u, v).cwiseAbs().maxCoeff();
+    double k = mls_result.calculatePrincipalCurvatures(u, v).cwiseAbs().maxCoeff();
 
     mls_cloud_->at(i).curvature = k;
     mls_cloud_->at(i).ideal_edge_length = 2.0 * std::sin(rho_ / 2.0) / k;
@@ -222,7 +222,7 @@ void AdvancingFront<PointNT>::performReconstruction(pcl::PointCloud<PointNT>& po
 
   polygons.clear();
   polygons.reserve(mesh_.sizeFaces());
-  for (size_t i = 0; i < mesh_.sizeFaces(); ++i)
+  for (std::size_t i = 0; i < mesh_.sizeFaces(); ++i)
   {
     VAFC circ = mesh_.getVertexAroundFaceCirculator(FaceIndex(i));
     const VAFC circ_end = circ;
@@ -511,7 +511,7 @@ AdvancingFront<PointNT>::samplePoint(const AdvancingFrontGuidanceFieldPointType&
   {
     proj_result = mls_result.projectPoint(add_point, pcl::MLSResult::ORTHOGONAL);
     result.point.curvature =
-        mls_result.calculatePrincipleCurvatures(proj_result.u, proj_result.v).cwiseAbs().maxCoeff();
+        mls_result.calculatePrincipalCurvatures(proj_result.u, proj_result.v).cwiseAbs().maxCoeff();
   }
   else
   {
@@ -756,7 +756,7 @@ AdvancingFront<PointNT>::isCloseProximity(const PredictVertexResults& pvr) const
   results.found = false;
 
   // First check for closest proximity violation
-  for (size_t i = 0; i < K.size(); ++i)
+  for (std::size_t i = 0; i < K.size(); ++i)
   {
     typename MeshTraits::VertexData& data = mesh_vertex_data_ptr_->at(K[i]);
     VertexIndex vi = mesh_.getVertexIndex(data);
@@ -898,7 +898,7 @@ AdvancingFront<PointNT>::isCloseProximity(const PredictVertexResults& pvr) const
   // If nothing was found check and make sure new vertex is not close to a fence
   if (!results.found)
   {
-    for (size_t i = 0; i < results.fences.size(); ++i)
+    for (std::size_t i = 0; i < results.fences.size(); ++i)
     {
       HalfEdgeIndex he = results.fences[i];
 
@@ -1081,7 +1081,7 @@ AdvancingFront<PointNT>::isFencesViolated(const VertexIndex& vi,
   results.found = false;
   Eigen::Vector3f sp = mesh_vertex_data_ptr_->at(vi.get()).getVector3fMap();
 
-  for (size_t i = 0; i < fences.size(); ++i)
+  for (std::size_t i = 0; i < fences.size(); ++i)
   {
     // The list of fences should not include any that are associated to the requesting vi
     assert(vi != mesh_.getOriginatingVertexIndex(fences[i]));
@@ -1148,7 +1148,7 @@ AdvancingFront<PointNT>::isTriangleToClose(const PredictVertexResults& pvr) cons
 
   // Check if any fences are violated.
   FenceViolationResults fvr;
-  for (size_t i = 0; i < cpr.fences.size(); ++i)
+  for (std::size_t i = 0; i < cpr.fences.size(); ++i)
   {
     if (results.found && results.closest == pvr.afront.prev.vi[2])
     {
@@ -1263,10 +1263,11 @@ bool AdvancingFront<PointNT>::isBoundaryPoint(const int index) const
 
   // Compute the angles between each neighboring point and the query point itself
   std::vector<float> angles(K.size());
-  float max_dif = FLT_MIN, dif;
-  int cp = 0;
+  float max_dif = std::numeric_limits<float>::min();
+  float dif{ 0 };
+  int cp{ 0 };
 
-  for (size_t i = 0; i < K.size(); ++i)
+  for (std::size_t i = 0; i < K.size(); ++i)
   {
     if (!std::isfinite(mls_cloud_->points[K[i]].x) || !std::isfinite(mls_cloud_->points[K[i]].y) ||
         !std::isfinite(mls_cloud_->points[K[i]].z))
@@ -1285,7 +1286,7 @@ bool AdvancingFront<PointNT>::isBoundaryPoint(const int index) const
   std::sort(angles.begin(), angles.end());
 
   // Compute the maximal angle difference between two consecutive angles
-  for (size_t i = 0; i < angles.size() - 1; ++i)
+  for (std::size_t i = 0; i < angles.size() - 1; ++i)
   {
     dif = angles[i + 1] - angles[i];
     if (max_dif < dif)
@@ -1392,8 +1393,8 @@ double AdvancingFront<PointNT>::getMaxStep(const Eigen::Vector3f& p, float& radi
   // What is shown in the afront paper. Need to figure out how to transverse the kdtree.
   double len = max_allowed_edge_length_;
   double radius = 0;
-  size_t j = 1;
-  size_t pcnt = 0;
+  std::size_t j = 1;
+  std::size_t pcnt = 0;
   bool finished = false;
   double search_radius = search_radius_;
 
@@ -1405,8 +1406,8 @@ double AdvancingFront<PointNT>::getMaxStep(const Eigen::Vector3f& p, float& radi
 
   while (pcnt < (mls_cloud_->points.size() - 1))
   {
-    size_t cnt = mls_cloud_tree_->radiusSearch(pn, j * search_radius, k, k_dist);
-    for (size_t i = pcnt; i < cnt; ++i)
+    std::size_t cnt = mls_cloud_tree_->radiusSearch(pn, j * search_radius, k, k_dist);
+    for (std::size_t i = pcnt; i < cnt; ++i)
     {
       std::size_t neighbors = static_cast<std::size_t>(mls_.getMLSResults()[i].num_neighbors);
       if (neighbors < required_neighbors_)
@@ -1603,7 +1604,7 @@ template <typename PointNT>
 void AdvancingFront<PointNT>::printVertices() const
 {
   std::cout << "Vertices:\n   ";
-  for (size_t i = 0; i < mesh_.sizeVertices(); ++i)
+  for (std::size_t i = 0; i < mesh_.sizeVertices(); ++i)
   {
     std::cout << mesh_vertex_data_ptr_->at(i) << " ";
   }
@@ -1614,7 +1615,7 @@ template <typename PointNT>
 void AdvancingFront<PointNT>::printFaces() const
 {
   std::cout << "Faces:\n";
-  for (size_t i = 0; i < mesh_.sizeFaces(); ++i)
+  for (std::size_t i = 0; i < mesh_.sizeFaces(); ++i)
     printFace(FaceIndex(i));
 }
 
@@ -1639,6 +1640,6 @@ void AdvancingFront<PointNT>::printFace(const FaceIndex& idx_face) const
   std::cout << std::endl;
 }
 
-}  // namespace industrial_pcl
+}  // namespace advancing_front_mesher
 
-#define PCL_INSTANTIATE_AdvancingFront(T) template class PCL_EXPORTS industrial_pcl::AdvancingFront<T>;
+#define PCL_INSTANTIATE_AdvancingFront(T) template class PCL_EXPORTS advancing_front_mesher::AdvancingFront<T>;
