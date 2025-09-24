@@ -49,4 +49,4 @@ jobs:
           add-ros-ppa: true
           vcs-file: dependencies.repos
           target-path: target_ws/src
-          target-args: --cmake-args -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DBUILD_TESTING=ON
+          target-args: --cmake-args -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DBUILD_TESTING=ON -DENABLE_CLANG_TIDY=ON

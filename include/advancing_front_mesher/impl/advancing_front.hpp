@@ -40,7 +40,10 @@
 
 #pragma once
 
+#ifndef PCL_NO_PRECOMPILE
 #include <advancing_front_mesher/advancing_front.h>
+#endif
+
 #include <advancing_front_mesher/utils/distances.h>
 #include <advancing_front_mesher/utils/normals.h>
 

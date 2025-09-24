@@ -38,10 +38,10 @@
  *
  */
 
+#define PCL_NO_PRECOMPILE
 #include <pcl/impl/instantiate.hpp>
-#include <pcl/point_types.h>
-#include <advancing_front_mesher/advancing_front.h>
-#include <advancing_front_mesher/impl/advancing_front.hpp>
+#include <pcl/point_types.h>                         // IWYU pragma: keep
+#include <advancing_front_mesher/advancing_front.h>  // IWYU pragma: keep
 
 // Instantiations of specific point types
 PCL_INSTANTIATE(AdvancingFront, (pcl::PointXYZ)(pcl::PointXYZRGB)(pcl::PointXYZRGBA))
