@@ -63,7 +63,7 @@ TEST(AdvancingFrontMesher, AdvancingFront)
   cloud.is_dense = false;
 
   advancing_front_mesher::AdvancingFront<pcl::PointXYZ> mesher;
-  pcl::PointCloud<pcl::PointXYZ>::Ptr in_cloud(new pcl::PointCloud<pcl::PointXYZ>(cloud));
+  auto in_cloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ>>(cloud);
   pcl::PolygonMesh output;
 
   mesher.setRho(0.5);

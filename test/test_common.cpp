@@ -40,11 +40,9 @@
 #include <advancing_front_mesher/utils/distances.h>
 
 #include <gtest/gtest.h>
-#include <pcl/pcl_tests.h>
 #include <pcl/common/common.h>
 #include <pcl/common/distances.h>
 #include <pcl/point_types.h>
-#include <pcl/point_cloud.h>
 
 using namespace advancing_front_mesher;
 
@@ -55,13 +53,13 @@ TEST(AdvancingFrontMesher, Common)
   const pcl::PointXYZ p2(0, 1, 0);
   const pcl::PointXYZ p3(0, 0, 1);
 
-  double radius = getCircumcircleRadius(p1, p2, p3);
+  const double radius = getCircumcircleRadius(p1, p2, p3);
   EXPECT_NEAR(radius, 0.816497, 1e-4);
 
   const Eigen::Vector4f pt(1, 0, 0, 0);
   const Eigen::Vector4f line_pt(0, 0, 0, 0);
   const Eigen::Vector4f line_dir(1, 1, 0, 0);
-  double point2line_disance = sqrt(pcl::sqrPointToLineDistance(pt, line_pt, line_dir));
+  const double point2line_disance = sqrt(pcl::sqrPointToLineDistance(pt, line_pt, line_dir));
   EXPECT_NEAR(point2line_disance, sqrt(2.0) / 2, 1e-4);
 
   Eigen::Vector3f n1(0.5, 0.5, 0.0);
@@ -86,7 +84,7 @@ TEST(AdvancingFrontMesher, pointToLineSegmentDistance)
   Eigen::Vector3f lp1(0.0, 0.0, 0.0);
   Eigen::Vector3f lp2(1.0, 0.0, 0.0);
   Eigen::Vector3f p(0.5, 1.0, 0.0);
-  PointToLineSegmentDistanceResults results = pointToLineSegmentDistance(lp1, lp2, p);
+  const PointToLineSegmentDistanceResults results = pointToLineSegmentDistance(lp1, lp2, p);
   EXPECT_FLOAT_EQ(results.d, 1.0);
   EXPECT_FLOAT_EQ(results.mu, 0.5);
   EXPECT_TRUE(results.p.isApprox(Eigen::Vector3f(0.5, 0.0, 0.0), 1e-10));
@@ -94,10 +92,10 @@ TEST(AdvancingFrontMesher, pointToLineSegmentDistance)
 
 TEST(AdvancingFrontMesher, pointToLineSegmentDistanceLeftBound)
 {
-  Eigen::Vector3f lp1(0.0, 0.0, 0.0);
-  Eigen::Vector3f lp2(1.0, 0.0, 0.0);
-  Eigen::Vector3f p(-0.5, 1.0, 0.0);
-  PointToLineSegmentDistanceResults results = pointToLineSegmentDistance(lp1, lp2, p);
+  const Eigen::Vector3f lp1(0.0, 0.0, 0.0);
+  const Eigen::Vector3f lp2(1.0, 0.0, 0.0);
+  const Eigen::Vector3f p(-0.5, 1.0, 0.0);
+  const PointToLineSegmentDistanceResults results = pointToLineSegmentDistance(lp1, lp2, p);
   EXPECT_FLOAT_EQ(results.d, std::sqrt(1.0 * 1.0 + 0.5 * 0.5));
   EXPECT_FLOAT_EQ(results.mu, 0.0);
   EXPECT_TRUE(results.p.isApprox(lp1, 1e-10));
@@ -105,10 +103,10 @@ TEST(AdvancingFrontMesher, pointToLineSegmentDistanceLeftBound)
 
 TEST(AdvancingFrontMesher, pointToLineSegmentDistanceRightBound)
 {
-  Eigen::Vector3f lp1(0.0, 0.0, 0.0);
-  Eigen::Vector3f lp2(1.0, 0.0, 0.0);
-  Eigen::Vector3f p(1.5, 1.0, 0.0);
-  PointToLineSegmentDistanceResults results = pointToLineSegmentDistance(lp1, lp2, p);
+  const Eigen::Vector3f lp1(0.0, 0.0, 0.0);
+  const Eigen::Vector3f lp2(1.0, 0.0, 0.0);
+  const Eigen::Vector3f p(1.5, 1.0, 0.0);
+  const PointToLineSegmentDistanceResults results = pointToLineSegmentDistance(lp1, lp2, p);
   EXPECT_FLOAT_EQ(results.d, std::sqrt(1.0 * 1.0 + 0.5 * 0.5));
   EXPECT_FLOAT_EQ(results.mu, 1.0);
   EXPECT_TRUE(results.p.isApprox(lp2, 1e-10));
@@ -116,18 +114,11 @@ TEST(AdvancingFrontMesher, pointToLineSegmentDistanceRightBound)
 
 TEST(AdvancingFrontMesher, lineSegmentToLineSegmentDistance)
 {
-  Eigen::Vector3f la0;
-  Eigen::Vector3f la1;
-  Eigen::Vector3f lb0;
-  Eigen::Vector3f lb1;
-
-  la0 << 0.0, 0.0, 0.0;
-  la1 << 1.0, 0.0, 0.0;
-
-  lb0 << 0.0, -0.5, 0.5;
-  lb1 << 0.0, 0.5, 0.5;
-
-  LineSegmentToLineSegmentDistanceResults results = lineSegmentToLineSegmentDistance(la0, la1, lb0, lb1);
+  const Eigen::Vector3f la0(0.0, 0.0, 0.0);
+  const Eigen::Vector3f la1(1.0, 0.0, 0.0);
+  const Eigen::Vector3f lb0(0.0, -0.5, 0.5);
+  const Eigen::Vector3f lb1(0.0, 0.5, 0.5);
+  const LineSegmentToLineSegmentDistanceResults results = lineSegmentToLineSegmentDistance(la0, la1, lb0, lb1);
   EXPECT_FLOAT_EQ(results.mu[0], 0.0);
   EXPECT_FLOAT_EQ(results.mu[1], 0.5);
 
@@ -138,18 +129,11 @@ TEST(AdvancingFrontMesher, lineSegmentToLineSegmentDistance)
 
 TEST(AdvancingFrontMesher, lineSegmentToLineSegmentDistanceParallel)
 {
-  Eigen::Vector3f la0;
-  Eigen::Vector3f la1;
-  Eigen::Vector3f lb0;
-  Eigen::Vector3f lb1;
-
-  la0 << 0.0, 0.0, 0.0;
-  la1 << 1.0, 0.0, 0.0;
-
-  lb0 << -0.5, 0.0, 0.5;
-  lb1 << 0.5, 0.0, 0.5;
-
-  LineSegmentToLineSegmentDistanceResults results = lineSegmentToLineSegmentDistance(la0, la1, lb0, lb1);
+  const Eigen::Vector3f la0(0.0, 0.0, 0.0);
+  const Eigen::Vector3f la1(1.0, 0.0, 0.0);
+  const Eigen::Vector3f lb0(-0.5, 0.0, 0.5);
+  const Eigen::Vector3f lb1(0.5, 0.0, 0.5);
+  const LineSegmentToLineSegmentDistanceResults results = lineSegmentToLineSegmentDistance(la0, la1, lb0, lb1);
   EXPECT_FLOAT_EQ(results.mu[0], 0.0);
   EXPECT_FLOAT_EQ(results.mu[1], 0.5);
 
