@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>advancing_front_mesher</name>
+  <version>0.0.0</version>
+  <description>The Advancing Front meshing package</description>
+
+  <author email="levi.armstrong@swri.org">Levi Armstrong</author>
+  <maintainer email="michael.ripperger@swri.org">Michael Ripperger</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>ros_industrial_cmake_boilerplate</depend>
+  <depend>libpcl-all-dev</depend>
+  <depend>gtest</depend>
+
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+</package>
