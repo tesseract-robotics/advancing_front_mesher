@@ -44,7 +44,7 @@
 // This test shows the results of meshing on a square grid that has a sinusoidal
 // variability in the z axis.  Red arrows show the surface normal for each triangle
 // in the mesh, and cyan boxes show the points used to seed the mesh creation algorithm
-TEST(PCL, AdvancingFront)
+TEST(AdvancingFrontMesher, AdvancingFront)
 {
   pcl::PointCloud<pcl::PointXYZ> cloud;
   unsigned int gridSize = 50;

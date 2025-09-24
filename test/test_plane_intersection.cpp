@@ -41,10 +41,9 @@
 #include <pcl/pcl_tests.h>
 
 using namespace advancing_front_mesher;
-using namespace pcl;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-TEST(PCL, lineWithPlaneIntersection)
+TEST(AdvancingFrontMesher, lineWithPlaneIntersection)
 {
   Eigen::Vector3f l0;
   Eigen::Vector3f l1;
@@ -67,7 +66,7 @@ TEST(PCL, lineWithPlaneIntersection)
   EXPECT_FALSE(results.parallel);
 }
 
-TEST(PCL, lineWithPlaneIntersectionParallel)
+TEST(AdvancingFrontMesher, lineWithPlaneIntersectionParallel)
 {
   Eigen::Vector3f l0;
   Eigen::Vector3f l1;
