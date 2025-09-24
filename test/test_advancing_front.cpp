@@ -53,10 +53,10 @@ TEST(PCL, AdvancingFront)
   {
     for (unsigned int y = 0; y < gridSize; y++)
     {
-      float d = 0.001f * (static_cast<float>(rand()) / static_cast<float>(RAND_MAX));
-      pcl::PointXYZ pt(x / 10.0f,
-                       y / 10.0f,
-                       0.5f * cos(static_cast<float>(x) / 10.0f) - 0.5f * sin(static_cast<float>(y) / 10.0f) + d);
+      float d = 0.001F * (static_cast<float>(rand()) / static_cast<float>(RAND_MAX));
+      pcl::PointXYZ pt(x / 10.0F,
+                       y / 10.0F,
+                       0.5f * cos(static_cast<float>(x) / 10.0F) - 0.5F * sin(static_cast<float>(y) / 10.0F) + d);
       cloud.push_back(pt);
     }
   }
