@@ -44,7 +44,7 @@ jobs:
       - name: Build and Tests
         uses: tesseract-robotics/colcon-action@v13
         with:
-          before-script: 'apt install -y -qq clang-tidy lcov'
+          before-script: 'apt install -y -qq clang-tidy libomp-dev lcov'
           ccache-prefix: ${{ matrix.distro }}
           add-ros-ppa: true
           vcs-file: dependencies.repos
