@@ -43,6 +43,7 @@
 #include <pcl/common/common.h>
 #include <pcl/common/distances.h>
 #include <pcl/point_types.h>
+#include <cmath>
 
 using namespace advancing_front_mesher;
 
@@ -59,8 +60,8 @@ TEST(AdvancingFrontMesher, Common)
   const Eigen::Vector4f pt(1, 0, 0, 0);
   const Eigen::Vector4f line_pt(0, 0, 0, 0);
   const Eigen::Vector4f line_dir(1, 1, 0, 0);
-  const double point2line_disance = sqrt(pcl::sqrPointToLineDistance(pt, line_pt, line_dir));
-  EXPECT_NEAR(point2line_disance, sqrt(2.0) / 2, 1e-4);
+  const double point2line_disance = std::sqrt(pcl::sqrPointToLineDistance(pt, line_pt, line_dir));
+  EXPECT_NEAR(point2line_disance, std::sqrt(2.0) / 2, 1e-4);
 
   Eigen::Vector3f n1(0.5, 0.5, 0.0);
   Eigen::Vector3f n1_neg(-0.5, -0.5, 0.0);
@@ -81,9 +82,9 @@ TEST(AdvancingFrontMesher, Common)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 TEST(AdvancingFrontMesher, pointToLineSegmentDistance)
 {
-  Eigen::Vector3f lp1(0.0, 0.0, 0.0);
-  Eigen::Vector3f lp2(1.0, 0.0, 0.0);
-  Eigen::Vector3f p(0.5, 1.0, 0.0);
+  const Eigen::Vector3f lp1(0.0, 0.0, 0.0);
+  const Eigen::Vector3f lp2(1.0, 0.0, 0.0);
+  const Eigen::Vector3f p(0.5, 1.0, 0.0);
   const PointToLineSegmentDistanceResults results = pointToLineSegmentDistance(lp1, lp2, p);
   EXPECT_FLOAT_EQ(results.d, 1.0);
   EXPECT_FLOAT_EQ(results.mu, 0.5);
