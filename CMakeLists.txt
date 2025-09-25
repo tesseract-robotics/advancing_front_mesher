@@ -10,14 +10,37 @@ find_package(
              io
              console)
 
+option(BUILD_SHARED_LIBS "Enables build shared libraries" ON)
+option(ENABLE_CLANG_TIDY "Enables compilation with clang-tidy" OFF)
+option(ENABLE_CODE_COVERAGE "Enables compilation with code coverage" OFF)
+option(BUILD_TESTING "Enables compilation of unit tests" OFF)
+option(ENABLE_CPACK "Enable cpack to generate debian or nuget packages" OFF)
+
+set(COVERAGE_EXCLUDE
+    /*/install/*
+    /*/devel/*
+    /usr/*
+    /opt/*
+    ${CMAKE_CURRENT_LIST_DIR}/test/*
+    /*/gtest/*)
+
+initialize_code_coverage(ENABLE ${ENABLE_CODE_COVERAGE})
+add_code_coverage_all_targets(EXCLUDE ${COVERAGE_EXCLUDE} ENABLE ${ENABLE_CODE_COVERAGE})
+
 # Advancing Front Library
-add_library(${PROJECT_NAME} SHARED src/advancing_front.cpp)
+add_library(${PROJECT_NAME} src/advancing_front.cpp)
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra)
 target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
                                                   "$<INSTALL_INTERFACE:include>")
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${PCL_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${PCL_LIBRARIES})
 target_cxx_version(${PROJECT_NAME} PRIVATE VERSION 14)
+target_clang_tidy(${PROJECT_NAME} ENABLE ${ENABLE_CLANG_TIDY})
+target_code_coverage(
+  ${PROJECT_NAME}
+  PRIVATE
+  ALL
+  ENABLE ${ENABLE_CODE_COVERAGE})
 
 # Add OpenMP support, if available
 find_package(OpenMP)

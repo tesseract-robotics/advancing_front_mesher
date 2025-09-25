@@ -44,9 +44,9 @@ jobs:
       - name: Build and Tests
         uses: tesseract-robotics/colcon-action@v13
         with:
-          before-script: 'apt install -y -qq clang-tidy lcov'
+          before-script: 'apt install -y -qq clang-tidy libomp-dev lcov'
           ccache-prefix: ${{ matrix.distro }}
           add-ros-ppa: true
           vcs-file: dependencies.repos
           target-path: target_ws/src
-          target-args: --cmake-args -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DBUILD_TESTING=ON
+          target-args: --cmake-args -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DBUILD_TESTING=ON -DENABLE_CLANG_TIDY=ON

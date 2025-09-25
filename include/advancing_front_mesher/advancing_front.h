@@ -51,52 +51,6 @@
 #include <pcl/octree/octree.h>
 
 #include <deque>
-#include <unordered_map>
-#include <utility>
-
-// This is required to fix clang-tidy build error
-namespace flann
-{
-namespace serialization
-{
-template <typename K, typename V, typename Hash, typename Eq, typename Alloc>
-struct Serializer<std::unordered_map<K, V, Hash, Eq, Alloc>>
-{
-  template <typename Archive>
-  static void save(Archive& ar, const std::unordered_map<K, V, Hash, Eq, Alloc>& m)
-  {
-    size_t n = m.size();
-    ar& n;
-    for (const auto& kv : m)
-    {
-      // ar expects lvalues
-      const_cast<K&>(kv.first);
-      const_cast<V&>(kv.second);
-      ar& const_cast<K&>(kv.first);
-      ar& const_cast<V&>(kv.second);
-    }
-  }
-
-  template <typename Archive>
-  static void load(Archive& ar, std::unordered_map<K, V, Hash, Eq, Alloc>& m)
-  {
-    size_t n = 0;
-    ar& n;
-    m.clear();
-    m.reserve(n);
-    for (size_t i = 0; i < n; ++i)
-    {
-      K k{};
-      V v{};
-      ar& k;
-      ar& v;
-      m.emplace(std::move(k), std::move(v));
-    }
-  }
-};
-
-}  // namespace serialization
-}  // namespace flann
 
 namespace advancing_front_mesher
 {

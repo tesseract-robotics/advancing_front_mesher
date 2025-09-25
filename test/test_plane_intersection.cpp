@@ -37,43 +37,34 @@
 #include <advancing_front_mesher/utils/intersections.h>
 
 #include <gtest/gtest.h>
-#include <pcl/common/common.h>
-#include <pcl/pcl_tests.h>
 
 using namespace advancing_front_mesher;
-using namespace pcl;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-TEST(PCL, lineWithPlaneIntersection)
+TEST(AdvancingFrontMesher, lineWithPlaneIntersection)
 {
-  Eigen::Vector3f l[2], u, v, origin;
-  l[0] << 0.5, 0.5, -0.5;
-  l[1] << 0.5, 0.5, 0.5;
-
-  origin << 0.0, 0.0, 0.0;
-  u << 1.0, 0.0, 0.0;
-  v << 0.0, 1.0, 0.0;
-
-  LineWithPlaneIntersectionResults results = lineWithPlaneIntersection(l[0], l[1], origin, u, v);
+  const Eigen::Vector3f l0(0.5, 0.5, -0.5);
+  const Eigen::Vector3f l1(0.5, 0.5, 0.5);
+  const Eigen::Vector3f u(1.0, 0.0, 0.0);
+  const Eigen::Vector3f v(0.0, 1.0, 0.0);
+  const Eigen::Vector3f origin(0.0, 0.0, 0.0);
+  const LineWithPlaneIntersectionResults results = lineWithPlaneIntersection(l0, l1, origin, u, v);
 
   EXPECT_FLOAT_EQ(results.mu, 0.5);
   EXPECT_FLOAT_EQ(results.mv, 0.5);
   EXPECT_FLOAT_EQ(results.mw, 0.5);
-  EXPECT_TRUE(results.p.isApprox(Eigen::Vector3f(0.5, 0.5, 0.0), 1e-10f));
+  EXPECT_TRUE(results.p.isApprox(Eigen::Vector3f(0.5, 0.5, 0.0), 1e-10F));
   EXPECT_FALSE(results.parallel);
 }
 
-TEST(PCL, lineWithPlaneIntersectionParallel)
+TEST(AdvancingFrontMesher, lineWithPlaneIntersectionParallel)
 {
-  Eigen::Vector3f l[2], u, v, origin;
-  l[0] << 0.0, 0.0, 0.5;
-  l[1] << 1.0, 0.0, 0.5;
-
-  origin << 0.0, 0.0, 0.0;
-  u << 1.0, 0.0, 0.0;
-  v << 0.0, 1.0, 0.0;
-
-  LineWithPlaneIntersectionResults results = lineWithPlaneIntersection(l[0], l[1], origin, u, v);
+  const Eigen::Vector3f l0(0.0, 0.0, 0.5);
+  const Eigen::Vector3f l1(1.0, 0.0, 0.5);
+  const Eigen::Vector3f u(1.0, 0.0, 0.0);
+  const Eigen::Vector3f v(0.0, 1.0, 0.0);
+  const Eigen::Vector3f origin(0.0, 0.0, 0.0);
+  const LineWithPlaneIntersectionResults results = lineWithPlaneIntersection(l0, l1, origin, u, v);
 
   EXPECT_TRUE(results.parallel);
 }
